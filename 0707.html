@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .column-labels {
+            display: flex;
+            /* justify-content: space-around; */
+            width: 700px;
+            margin-bottom: 24px;
+            margin-left: 80px;
+        }
+
+        .product {
+            display: flex;
+            justify-content: space-around;
+            width: 700px;
+            align-items: center;
+        }
+
+        label {
+            width: 20%;
+            margin-right: 20px;
+        }
+
+        .product div,
+        img {
+            width: 100px;
+            margin-right: 20px;
+        }
+
+        input {
+            width: 100px;
+            height: 20px;
+        }
+
+        .totals {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 94px;
+        }
+
+        .product-total {
+            margin-left: 12px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="app">
+
+
+        <h1>Shopping Cart</h1>
+
+        <div class="shopping-cart">
+
+            <div class="column-labels">
+                <label class="product-details">Product</label>
+                <label class="product-price">Price</label>
+                <label class="product-quantity">Quantity</label>
+                <label class="product-total">Total</label>
+            </div>
+
+            <div v-for="(item, index) in products" :key="item.index" class="product">
+                <div class="product-image">
+                    <img :src="item.img">
+                </div>
+                <div class="product-details">
+                    <div class="product-title">{{item.title}}</div>
+                </div>
+                <div class="product-price">{{item.price}}</div>
+
+                <input type="number" v-model="item.count" min="1">
+
+                <div class="product-removal">
+                    <button class="remove-product" @click="removeCart(index, item)">
+                        X
+                    </button>
+                </div>
+                <div class="product-line-price">{{item.price*item.count}}</div>
+            </div>
+
+            <div class="totals">
+                <label>Grand Total</label>
+                <div class="totals-value" id="cart-total">{{parsePrice}}</div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    products: [
+                        {
+                            img: 'https://s.cdpn.io/3/dingo-dog-bones.jpg',
+                            title: 'Dingo Dog Bones',
+                            price: 100,
+                            count: '',
+                        }, {
+                            img: 'https://s.cdpn.io/3/large-NutroNaturalChoiceAdultLambMealandRiceDryDogFood.png',
+                            title: 'Rice Dog Food',
+                            price: 200,
+                            count: '',
+                        }
+                    ]
+                }
+            },
+            computed: {
+                parsePrice() {
+                    if (this.products.length === 0) return 0
+                    let total = 0
+                    for (let index = 0; index < this.products.length; index++) {
+                        const accumulator = this.products[index]['price'] * this.products[index]['count']
+                        total += accumulator
+                    }
+                    return total
+                },
+            },
+            methods: {
+                removeCart(index) {
+                    this.products.splice(index, 1)
+                }
+            }
+        }).mount("#app")
+
+
+
+    </script>
+</body>
+
+</html>
